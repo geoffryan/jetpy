@@ -1,8 +1,27 @@
 import math
 import numpy as np
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
-def plotPolar(ax, grid, f, includeOrigin=False, colorbar=True):
+def plotPolar(ax, grid, f, scale='linear', vmin=None, vmax=None,
+                includeOrigin=False, colorbar=True, cmap=None,
+                label=None, xlabel=None, ylabel=None, labelkwargs={}):
+
+    if scale == 'log':
+        norm = mpl.colors.LogNorm(vmin, vmax)
+    else:
+        norm = mpl.colors.Normalize(vmin, vmax)
+
+    if cmap is None:
+        try:
+            cmap = mpl.cm.inferno
+        except:
+            cmap = mpl.cm.afmhot
+
+    if vmin is None:
+        vmin = f.min()
+    if vmax is None:
+        vmax = f.max()
 
     k = 0
     for j in range(grid.Nt):
@@ -30,5 +49,19 @@ def plotPolar(ax, grid, f, includeOrigin=False, colorbar=True):
         Y[0,:] = rf*math.sin(ta)
         Y[1,:] = rf*math.sin(tb)
 
-        ax.pcolormesh(X, Y, fray)
+        C = ax.pcolormesh(X, Y, fray, cmap=cmap, vmin=vmin, vmax=vmax,
+                                        norm=norm)
+
+    if colorbar:
+        cb = (ax.get_figure()).colorbar(C)
+        if label is not None:
+            cb.set_label(label, **labelkwargs)
+    ax.set_aspect('equal')
+
+    if xlabel is not None:
+        ax.set_xlabel(xlabel, **labelkwargs)
+    if ylabel is not None:
+        ax.set_ylabel(ylabel, **labelkwargs)
+
+
 
