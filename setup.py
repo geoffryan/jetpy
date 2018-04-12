@@ -9,6 +9,7 @@ setup(
     version=version.version,
     description='Tools for the JET code',
     packages=['jetpy'],
+    scripts=['bin/jetPlotR'],
     classifiers=[
         "Programming Language :: Python",
         "Development Status :: 3 - Alpha",

@@ -17,6 +17,8 @@ class JetGrid:
     index = None
     Nr = None
 
+    threeDee = False
+
     filename = None
 
     def __init__(self, filename=None):
@@ -46,24 +48,27 @@ class JetGrid:
             return self.prim[:,1]
 
     @property
-    def vr(self):
+    def ur(self):
         if self.prim is not None:
             return self.prim[:,2]
 
     @property
-    def vt(self):
+    def ut(self):
         if self.prim is not None:
             return self.prim[:,3]
 
     @property
-    def vp(self):
-        if self.prim is not None:
+    def up(self):
+        if self.threeDee and self.prim is not None:
             return self.prim[:,4]
 
     @property
     def q(self):
         if self.prim is not None:
-            return np.atleast_2d(self.prim[:,5:])
+            if self.threeDee:
+                return self.prim[:,5:].T
+            else:
+                return self.prim[:,4:].T
 
     def _loadFromCheckpoint(self, filename):
         self.filename = filename
@@ -84,6 +89,9 @@ class JetGrid:
         nc = cells.shape[0]
         nphi = self.pkph.shape[0] - 1
         nth = self.tjph.shape[0] - 1
+
+        if nphi > 1:
+            self.threeDee = True
 
         self.prim = cells[:,:-1]
 

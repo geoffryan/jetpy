@@ -3,6 +3,46 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+def plotRRay(ax, grid, f, theta=0, phi=0, xscale='linear', yscale='linear', 
+                    vmin=None, vmax=None, includeOrigin=False, xlabel=None,
+                    ylabel=None, labelkwargs={}, **kwargs):
+
+    j = 0
+    k = 0
+    a = grid.index[j,k]
+    b = grid.index[j,k]+grid.Nr[j,k]
+
+    if not includeOrigin:
+        a += 1
+
+    ax.plot(grid.r[a:b], f[a:b], **kwargs)
+
+    if vmin is not None or vmax is not None:
+        ax.set_ylim(vmin, vmax)
+    ax.set_xscale(xscale)
+    ax.set_yscale(yscale)
+
+    if xlabel is not None:
+        ax.set_xlabel(xlabel, **labelkwargs)
+    if ylabel is not None:
+        ax.set_ylabel(xlabel, **labelkwargs)
+
+def plotRAll(ax, grid, f, scale='linear', vmin=None,
+                    vmax=None, includeOrigin=False, xlabel=None, ylabel=None,
+                    labelkwargs={}, **kwargs):
+
+    ax.plot(grid.r, f, *args, **kwargs)
+
+    ax.set_ylim(vmin, vmax)
+    ax.set_xscale(scale)
+    ax.set_yscale(scale)
+
+    if xlabel is not None:
+        ax.set_xlabel(xlabel, **labelkwargs)
+    if ylabel is not None:
+        ax.set_ylabel(xlabel, **labelkwargs)
+
+
 def plotPolar(ax, grid, f, scale='linear', vmin=None, vmax=None,
                 includeOrigin=False, colorbar=True, cmap=None,
                 label=None, xlabel=None, ylabel=None, labelkwargs={}):
